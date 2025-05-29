@@ -1,23 +1,18 @@
-# Face Detection Video using OpenCV
+import cv2
+import cv2.data
 
-This project uses Python and OpenCV to detect human faces from your webcam in real-time using Haar Cascade classifiers.
+modelPath = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+trainedMachine = cv2.CascadeClassifier(modelPath)
 
-## Features
-- Real-time face detection using webcam
-- Uses OpenCV's pre-trained Haar cascade model
-- Displays video in grayscale with detected faces outlined
+camera = cv2.VideoCapture(0)
+while True:
+    status, frame = camera.read()
+    faces = trainedMachine.detectMultiScale(frame, 1.3, 5)
+    for face in faces:
+        x, y, w, h = face
+        frame = cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 4)
 
-## Requirements
-- Python 3.x
-- OpenCV (`pip install opencv-python`)
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-## How to Run
-1. Clone this repository or download the code.
-2. Make sure OpenCV is installed:  
-   `pip install opencv-python`
-3. Run the script:  
-   `python face_detection_video.py`
-
-## Output
-Detected faces will be highlighted with a blue rectangle in a grayscale video stream.
-
+    cv2.imshow("All faces", frame)
+    cv2.waitKey(1)
